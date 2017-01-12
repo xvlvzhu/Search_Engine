@@ -38,7 +38,7 @@ public class News_Clawler {
 	
 	private static int i=0; 
 	
-	public static void main(String[] args) {
+	public static void start_crawler() {
 		News_Clawler news_Clawler = new News_Clawler();
 		try {
 			news_Clawler.seed_url(news_Clawler);
