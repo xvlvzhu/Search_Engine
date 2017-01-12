@@ -187,7 +187,8 @@ public class News_Clawler {
 			return Jsoup.connect(url).timeout(30000).get();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.out.println("网络有延迟，请耐心等待！");
 		}
 			
 		
@@ -218,7 +219,8 @@ public class News_Clawler {
 		UrlData urlData = new UrlData();
 		urlData.setUrl(url);
 		urlData.setHtml(html_tmp.toString());
-		urlData.setSource(url_Filter(url));
+		String tp = url_Filter(url);
+		urlData.setSource(tp);
 
 		for (Element hre : href) {
 			String linkUrl = hre.attr("abs:href");// 获取网页的绝对地址
@@ -238,7 +240,7 @@ public class News_Clawler {
 		}
 		allurlSet.add(url);
 //		System.out.println(urlData);
-		System.out.println("写入第"+ i++ +"条记录");
+		System.out.println("写入第"+ i++ +"条记录"+"    网址："+url + "    来源："+tp);
 		return urlData;
 		
 	}
