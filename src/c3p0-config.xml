@@ -3,10 +3,10 @@
   <!-- This app is massive! -->
   <named-config name="MVCApp"> 
   	
-  	<property name="user">root</property>
-  	<property name="password">root</property>
+  	<property name="user">XXX</property>
+  	<property name="password">XXX</property>
   	<property name="driverClass">com.mysql.jdbc.Driver</property>
-  	<property name="jdbcUrl">jdbc:mysql://202.117.16.188:3306/search_engine?useUnicode=true&amp;characterEncoding=UTF-8</property>
+  	<property name="jdbcUrl">jdbc:mysql://XXX/XXX?useUnicode=true&amp;characterEncoding=UTF-8</property>
   	
     <property name="acquireIncrement">5</property>
     <property name="initialPoolSize">10</property>
