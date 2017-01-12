@@ -8,7 +8,11 @@ This is a crawler for Tecent news,Netease News and some news website <br>
 2、searchengine.jar -> add to build path<br> 
 3、添加https://github.com/zxl1994/Search_Engine 目录中的Jar依赖包<br> 
 4、c3p0-config.xml中填入数据库信息<br> 
-5、执行News_Clawler.start_crawler();<br> 
+5、News_Clawler news_Clawler = News_Clawler.getInstance();<br>//创建实例
+  news_Clawler.start_crawler();<br> //启动爬虫
+  news_Clawler.user_defined_url();<br> //自定义爬虫
+  news_Clawler.stop_crawler();<br> //停止爬虫
+  
 
 
 
