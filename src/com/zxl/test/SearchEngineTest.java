@@ -3,12 +3,12 @@ package com.zxl.test;
 import java.util.Scanner;
 
 import com.zxl.crawl.Balanced_Crawler;
-import com.zxl.crawl.News_Clawer_2;
+import com.zxl.crawl.News_Crawler_2;
 import com.zxl.crawl.News_Clawler;
 
 public class SearchEngineTest {
 	public static void main(String[] args) {
-		News_Clawer_2 news_Clawler = News_Clawer_2.getInstance();
+		News_Crawler_2 news_Clawler = News_Crawler_2.getInstance();
 		news_Clawler.start_crawler();
 //		try {
 //			Thread.sleep(10000);

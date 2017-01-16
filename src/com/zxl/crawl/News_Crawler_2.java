@@ -29,7 +29,7 @@ import com.zxl.javaBean.UrlData;
  * @author zxl
  *
  */
-public class News_Clawer_2 {
+public class News_Crawler_2 {
 	// 初始化种子url
 	private static String[] seeds = new String[] { "http://news.sina.com.cn/", "http://www.sohu.com/",
 			"http://news.163.com/", "http://www.ifeng.com/", "http://news.qq.com/", "http://www.xinhuanet.com/",
@@ -68,12 +68,12 @@ public class News_Clawer_2 {
 
 	private static int exit = 0;// 程序终止标志位
 
-	private static News_Clawer_2 news_Clawler = new News_Clawer_2();
+	private static News_Crawler_2 news_Clawler = new News_Crawler_2();
 
-	private News_Clawer_2() {
+	private News_Crawler_2() {
 	}
 
-	public static News_Clawer_2 getInstance() {
+	public static News_Crawler_2 getInstance() {
 		return news_Clawler;
 	}
 
@@ -147,7 +147,7 @@ public class News_Clawer_2 {
 	 * @return
 	 * @throws IOException
 	 */
-	private HashMap<String, String> seed_url(News_Clawer_2 newCl) throws IOException {
+	private HashMap<String, String> seed_url(News_Crawler_2 newCl) throws IOException {
 		// 获取所有种子页面
 		Document[] documents = new Document[seeds.length];
 		// 获取网页中的所有url地址，并保存在linkurls链表中
