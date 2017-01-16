@@ -14,7 +14,7 @@ news_Clawler.start_crawler(); //启动爬虫 <br>
 news_Clawler.user_defined_url(); //自定义爬虫<br>
 news_Clawler.stop_crawler(); //停止爬虫<br>
 
-ReverseIndex.reverseIndex("XXX", "XXX", false);<br>
+ReverseIndex.reverseIndex("XXX","XXX",false);<br>
 参数1：创建/存放索引的目录<br>
 参数2：检索关键字<br>
 参数3：true：更新/创建索引  false：使用已建立的索引<br>
