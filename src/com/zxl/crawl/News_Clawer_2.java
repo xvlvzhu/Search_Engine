@@ -3,6 +3,7 @@ package com.zxl.crawl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
@@ -19,26 +20,47 @@ import org.junit.Test;
 
 import com.zxl.dao.SearchDAO;
 import com.zxl.dao.SearchDAOJdbcImpl;
+import com.zxl.javaBean.Queue;
 import com.zxl.javaBean.UrlData;
 
-public class News_Clawler {
+/**
+ * 1 在html页面中提取文本 提取新闻长度小于20的新闻 2 将新闻头页面放入列表
+ * 
+ * @author zxl
+ *
+ */
+public class News_Clawer_2 {
 	// 初始化种子url
 	private static String[] seeds = new String[] { "http://news.sina.com.cn/", "http://www.sohu.com/",
 			"http://news.163.com/", "http://www.ifeng.com/", "http://news.qq.com/", "http://www.xinhuanet.com/",
 			"http://www.people.com.cn/", "http://www.chinanews.com/", "http://www.huanqiu.com/",
 			"http://news.cctv.com/" };
-	
+
 	private static String[] seeds_user_defined;
 	// 初始化选择器
 	private final static String[] selectors = new String[] { "div.main-nav", "div.index-nav", "div.N-nav-channel",
 			"div.NavM", "div.channelNavPart", "div.navCont", "div.w1000", "div.nav_navcon", "div.navMain",
 			"div.top_nav" };
+
+	private final static String[] news_selectors = new String[] { "div#artibody", "div#contentText", "div#endText",
+			"div#main_content", "div.qq_article", "div#content", "div#rwb_zw", "div.content", "div#text", "div.cnt_bd" };
+
 	// 初始类别集合(网址，中英类别)
 	private static HashMap<String, String> url_seeds = new HashMap<>();
 	// 线程数
 	public final static int threadCount = 10;
 	// 待爬取队列
-	ArrayList<String> notCrawlurlSet = new ArrayList<String>();
+//	ArrayList<String> notCrawlurlSet = new ArrayList<String>();
+	LinkedHashMap<String,String> notCrawlurlSet = new LinkedHashMap<>();
+	private static Queue[] q = new Queue[seeds.length];
+
+	static {
+		for (int i = 0; i < q.length; i++) {
+			q[i] = new Queue();
+			q[i].arrayList.add(seeds[i]);
+		}
+	}
+
 	// 已爬取队列
 	ArrayList<String> allurlSet = new ArrayList<String>();
 
@@ -46,40 +68,41 @@ public class News_Clawler {
 
 	private static int exit = 0;// 程序终止标志位
 
-	private static News_Clawler news_Clawler = new News_Clawler();
+	private static News_Clawer_2 news_Clawler = new News_Clawer_2();
 
-	private News_Clawler() {}
+	private News_Clawer_2() {
+	}
 
-	public static News_Clawler getInstance() {
+	public static News_Clawer_2 getInstance() {
 		return news_Clawler;
 	}
 
-//	public static void main(String[] args) {
-//		News_Clawler news_Clawler = new News_Clawler();
-//
-//		new Thread(new Runnable() {
-//			public void run() {
-//				stop_crawler();
-//			};
-//		}, "thread-exit");
-//
-//		try {
-//			news_Clawler.seed_url(news_Clawler);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		news_Clawler.begin();
-//		try {
-//			Thread.sleep(5500);
-//		} catch (Exception e) {
-//		}
-//		new Thread(new Runnable() {
-//			public void run() {
-//				stop_crawler();
-//			};
-//		}, "thread-exit").start();
-//	}
+	// public static void main(String[] args) {
+	// News_Clawler news_Clawler = new News_Clawler();
+	//
+	// new Thread(new Runnable() {
+	// public void run() {
+	// stop_crawler();
+	// };
+	// }, "thread-exit");
+	//
+	// try {
+	// news_Clawler.seed_url(news_Clawler);
+	// } catch (IOException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// news_Clawler.begin();
+	// try {
+	// Thread.sleep(5500);
+	// } catch (Exception e) {
+	// }
+	// new Thread(new Runnable() {
+	// public void run() {
+	// stop_crawler();
+	// };
+	// }, "thread-exit").start();
+	// }
 
 	public void start_crawler() {
 		// News_Clawler news_Clawler = new News_Clawler();
@@ -95,25 +118,25 @@ public class News_Clawler {
 
 	public void stop_crawler() {
 		exit = 1;
-		System.out.println("停止爬虫......."); 
+		System.out.println("停止爬虫.......");
 	}
-	
+
 	/**
 	 * 用户自定义输入
 	 */
 	public void user_defined_url() {
-		Scanner input=new Scanner(System.in);
+		Scanner input = new Scanner(System.in);
 		System.out.println("请输入您想搜索的网站个数：");
 		int n = input.nextInt();
 		seeds_user_defined = new String[n];
-		for(int i=0;i<n;i++){
+		for (int i = 0; i < n; i++) {
 			System.out.println("请输入您想搜索的网站：");
-			Scanner input1=new Scanner(System.in);
-			String url = "http://"+input1.nextLine().trim();
-			seeds_user_defined[i]=url;
-			notCrawlurlSet.add(url);
+			Scanner input1 = new Scanner(System.in);
+			String url = "http://" + input1.nextLine().trim();
+			seeds_user_defined[i] = url;
+			notCrawlurlSet.put(url,"用户自定义网站");
 		}
-		seeds=seeds_user_defined;
+		seeds = seeds_user_defined;
 		start_crawler();
 	}
 
@@ -124,7 +147,7 @@ public class News_Clawler {
 	 * @return
 	 * @throws IOException
 	 */
-	private HashMap<String, String> seed_url(News_Clawler newCl) throws IOException {
+	private HashMap<String, String> seed_url(News_Clawer_2 newCl) throws IOException {
 		// 获取所有种子页面
 		Document[] documents = new Document[seeds.length];
 		// 获取网页中的所有url地址，并保存在linkurls链表中
@@ -140,9 +163,10 @@ public class News_Clawler {
 				// String type = linkUrl.split("\\.")[0].substring(7);
 				url_seeds.put(linkUrl, hre.text());
 				// System.out.println(linkUrl);
-				if (url_Filter(linkUrl)!="") {
-					
-					notCrawlurlSet.add(linkUrl);
+				if (url_Filter(linkUrl) != "") {
+
+					// notCrawlurlSet.add(linkUrl);
+					q[i].arrayList.add(linkUrl);
 				}
 			}
 
@@ -196,12 +220,15 @@ public class News_Clawler {
 							break;
 						}
 						// System.out.println("当前进入"+Thread.currentThread().getName());
-						String tmp = getAUrl();
+						String tmp = getAUrl(j);
 						if (tmp != null) {
 							try {
 								Document html_tmp = sendRequest(tmp);
-								UrlData uData = parseHtml(html_tmp, tmp);
-								searchDAO.save(uData);
+								UrlData uData = parseHtml(html_tmp, tmp, j);
+								if (uData!=null) {
+									
+									searchDAO.save1(uData, "Search_Engine_Test_ZXL_2");
+								}
 
 							} catch (Exception e) {
 								// e.printStackTrace();
@@ -218,22 +245,22 @@ public class News_Clawler {
 		}
 	}
 
-	private synchronized String getAUrl() {
-		if (notCrawlurlSet.isEmpty())
+	private synchronized String getAUrl(int j) {
+		if (q[j].arrayList.isEmpty())
 			return null;
 		String tmpAUrl;
 		// synchronized(notCrawlurlSet){
-		tmpAUrl = notCrawlurlSet.get(0);
-		notCrawlurlSet.remove(0);
+		tmpAUrl = q[j].arrayList.get(0);
+		q[j].arrayList.remove(0);
 		// }
 		return tmpAUrl;
 	}
 
-	private synchronized void addUrl(String url, int d) {
-		notCrawlurlSet.add(url);
-		allurlSet.add(url);
-		// depth.put(url, d);
-	}
+//	private synchronized void addUrl(String url, int j) {
+//		q[j].linkedHashMap.;
+//		allurlSet.add(url);
+//		// depth.put(url, d);
+//	}
 
 	/**
 	 * 请求html页面
@@ -241,25 +268,6 @@ public class News_Clawler {
 	 * @return
 	 */
 	private Document sendRequest(String url) {
-		// HttpClient client = new HttpClient();
-		// // 设置代理服务器地址和端口
-		// //
-		// client.getHostConfiguration().setProxy("proxy_host_addr",proxy_port);
-		// // 使用 GET 方法 ，如果服务器需要通过 HTTPS 连接，那只需要将下面 URL 中的 http 换成 https
-		// HttpMethod method = new GetMethod(url);
-		// method.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET,"UTF-8");
-		// // 使用POST方法
-		// // HttpMethod method = new PostMethod("http://java.sun.com");
-		// try {
-		// client.executeMethod(method);
-		// return method.getResponseBodyAsString();
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } finally {
-		// // 释放连接
-		// method.releaseConnection();
-
 		try {
 			return Jsoup.connect(url).timeout(30000).get();
 		} catch (IOException e) {
@@ -267,19 +275,6 @@ public class News_Clawler {
 			// e.printStackTrace();
 			System.out.println("网络有延迟，请耐心等待！");
 		}
-
-		// 打印服务器返回的状态
-		// System.out.println(method.getStatusLine());
-		// 打印返回的信息
-		// try {
-		// return method.getResponseBodyAsString();
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } finally {
-		// // 释放连接
-		// method.releaseConnection();
-		// }
 		return null;
 	}
 
@@ -288,34 +283,38 @@ public class News_Clawler {
 	 * 
 	 * @param html_tmp
 	 */
-	private UrlData parseHtml(Document html_tmp, String url) {
+	private UrlData parseHtml(Document html_tmp,String url, int j) {
 		// Document doc = Jsoup.parse(html_tmp);
 		Elements href = html_tmp.select("a[href]");
+		String title = html_tmp.select("h1").eq(0).text();
+		
+		
 		UrlData urlData = new UrlData();
-		urlData.setUrl(url);
-		urlData.setHtml(html_tmp.toString());
-		String tp = url_Filter(url);
-		urlData.setSource(tp);
-
-		for (Element hre : href) {
+		
+		String text = html_tmp.select(news_selectors[j]+" p").text(); 
+	    text=text.replace(Jsoup.parse(" ").text(), "");
+	    text=text.replace(Jsoup.parse("a[href]").text(), "");
+//	    System.out.println(text);
+	    for (Element hre : href) {
 			String linkUrl = hre.attr("abs:href");// 获取网页的绝对地址
 			if (url_Filter(linkUrl) != "") {
 				// allurlSet.add(linkUrl);
-				notCrawlurlSet.add(linkUrl);
+				q[j].arrayList.add(linkUrl);
 				urlData.addUrl_link(linkUrl);
 			}
-			// if (!urlMap.get(type).contains(linkUrl)) {
-			// if (linkUrl.contains("http://" + temp + ".163.com")) {
-			// urlMap.get(type).add(linkUrl);
-			// UrlData urlData = new UrlData(type, linkUrl, hre.text());
-			// urlDatas.add(urlData);
-			// // System.out.println(linkUrl);
-			// }
-			// }
+	    }
+		if (text.length()>20 && title.length()>5) {
+			urlData.setUrl(url);
+			urlData.setHtml(text);
+			urlData.setTitle(title);
+			String tp = url_Filter(url);
+			urlData.setSource(tp);
+		}else{
+			return null;
 		}
 		allurlSet.add(url);
-		// System.out.println(urlData);
-		System.out.println("写入第" + i++ + "条记录" + "    网址：" + url + "    来源：" + tp);
+//		 System.out.println(urlData);
+		System.out.println("写入第" + i++ + "条记录" + "    网址：" + url + "    来源：" + urlData.getSource());
 		return urlData;
 
 	}

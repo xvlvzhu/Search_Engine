@@ -14,5 +14,17 @@
 	<classpathentry exported="true" kind="lib" path="jar/commons-dbcp-1.2.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="jar/commons-io-2.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="jar/commons-pool-1.3.jar"/>
+	<classpathentry kind="lib" path="jar/lucene-core-6.3.0.jar" sourcepath="D:/source/lucene-6.3.0-src/lucene-6.3.0">
+		<attributes>
+			<attribute name="source_encoding" value="UTF-8"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="jar/lucene-queryparser-6.3.0.jar" sourcepath="D:/source/lucene-6.3.0-src/lucene-6.3.0">
+		<attributes>
+			<attribute name="source_encoding" value="UTF-8"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="jar/lucene-analyzers-common-6.3.0.jar"/>
+	<classpathentry kind="lib" path="jar/lucene-analyzers-smartcn-6.3.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

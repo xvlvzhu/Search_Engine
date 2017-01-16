@@ -19,9 +19,10 @@ import org.junit.Test;
 
 import com.zxl.dao.SearchDAO;
 import com.zxl.dao.SearchDAOJdbcImpl;
+import com.zxl.javaBean.Queue;
 import com.zxl.javaBean.UrlData;
 
-public class News_Clawler {
+public class Balanced_Crawler {
 	// 初始化种子url
 	private static String[] seeds = new String[] { "http://news.sina.com.cn/", "http://www.sohu.com/",
 			"http://news.163.com/", "http://www.ifeng.com/", "http://news.qq.com/", "http://www.xinhuanet.com/",
@@ -39,6 +40,12 @@ public class News_Clawler {
 	public final static int threadCount = 10;
 	// 待爬取队列
 	ArrayList<String> notCrawlurlSet = new ArrayList<String>();
+	private static Queue[] q = new Queue[seeds.length];
+	 static{
+		 for(int i=0;i<q.length;i++){
+			 q[i]=new Queue();
+		 }
+	 }
 	// 已爬取队列
 	ArrayList<String> allurlSet = new ArrayList<String>();
 
@@ -46,11 +53,11 @@ public class News_Clawler {
 
 	private static int exit = 0;// 程序终止标志位
 
-	private static News_Clawler news_Clawler = new News_Clawler();
+	private static Balanced_Crawler news_Clawler = new Balanced_Crawler();
 
-	private News_Clawler() {}
+	private Balanced_Crawler() {}
 
-	public static News_Clawler getInstance() {
+	public static Balanced_Crawler getInstance() {
 		return news_Clawler;
 	}
 
@@ -124,7 +131,7 @@ public class News_Clawler {
 	 * @return
 	 * @throws IOException
 	 */
-	private HashMap<String, String> seed_url(News_Clawler newCl) throws IOException {
+	private HashMap<String, String> seed_url(Balanced_Crawler newCl) throws IOException {
 		// 获取所有种子页面
 		Document[] documents = new Document[seeds.length];
 		// 获取网页中的所有url地址，并保存在linkurls链表中
@@ -142,7 +149,8 @@ public class News_Clawler {
 				// System.out.println(linkUrl);
 				if (url_Filter(linkUrl)!="") {
 					
-					notCrawlurlSet.add(linkUrl);
+//					notCrawlurlSet.add(linkUrl);
+					q[i].arrayList.add(linkUrl);
 				}
 			}
 
@@ -196,12 +204,12 @@ public class News_Clawler {
 							break;
 						}
 						// System.out.println("当前进入"+Thread.currentThread().getName());
-						String tmp = getAUrl();
+						String tmp = getAUrl(j);
 						if (tmp != null) {
 							try {
 								Document html_tmp = sendRequest(tmp);
-								UrlData uData = parseHtml(html_tmp, tmp);
-								searchDAO.save(uData);
+								UrlData uData = parseHtml(html_tmp, tmp,j);
+								searchDAO.save(uData,"Search_Engine_Test_ZXL_1");
 
 							} catch (Exception e) {
 								// e.printStackTrace();
@@ -218,19 +226,19 @@ public class News_Clawler {
 		}
 	}
 
-	private synchronized String getAUrl() {
-		if (notCrawlurlSet.isEmpty())
+	private synchronized String getAUrl(int j) {
+		if (q[j].arrayList.isEmpty())
 			return null;
 		String tmpAUrl;
 		// synchronized(notCrawlurlSet){
-		tmpAUrl = notCrawlurlSet.get(0);
-		notCrawlurlSet.remove(0);
+		tmpAUrl = q[j].arrayList.get(0);
+		q[j].arrayList.remove(0);
 		// }
 		return tmpAUrl;
 	}
 
-	private synchronized void addUrl(String url, int d) {
-		notCrawlurlSet.add(url);
+	private synchronized void addUrl(String url, int j) {
+		q[j].arrayList.add(url);
 		allurlSet.add(url);
 		// depth.put(url, d);
 	}
@@ -288,7 +296,7 @@ public class News_Clawler {
 	 * 
 	 * @param html_tmp
 	 */
-	private UrlData parseHtml(Document html_tmp, String url) {
+	private UrlData parseHtml(Document html_tmp, String url,int j) {
 		// Document doc = Jsoup.parse(html_tmp);
 		Elements href = html_tmp.select("a[href]");
 		UrlData urlData = new UrlData();
@@ -301,7 +309,7 @@ public class News_Clawler {
 			String linkUrl = hre.attr("abs:href");// 获取网页的绝对地址
 			if (url_Filter(linkUrl) != "") {
 				// allurlSet.add(linkUrl);
-				notCrawlurlSet.add(linkUrl);
+				q[j].arrayList.add(linkUrl);
 				urlData.addUrl_link(linkUrl);
 			}
 			// if (!urlMap.get(type).contains(linkUrl)) {

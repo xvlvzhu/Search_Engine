@@ -87,7 +87,8 @@ public class DAO<T> {
 			connection = jdbcUtils.getConnection();
 			queryRunner.update(connection, sql, args);
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.out.println("Ö÷¼üÖØ¸´£¡");
 		} finally {
 			jdbcUtils.releaseConnection(connection);
 		}

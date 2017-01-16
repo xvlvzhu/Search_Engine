@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class UrlData {
 	private String url; // 网址
+	private String title; // 标题
 	private String html; // html
 	private String type; // 网页类型
 	private String source; // 来源
@@ -20,15 +21,50 @@ public class UrlData {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	
 
-	public UrlData(String url, String html, String type, String source, ArrayList<String> url_link) {
+//	public UrlData(String url, String html) {
+//		super();
+//		this.url = url;
+//		this.html = html;
+//	}
+//	
+//	
+
+
+
+	public UrlData(String url, String html, String title) {
 		super();
 		this.url = url;
+		this.title = title;
+		this.html = html;
+	}
+
+
+
+	public UrlData(String url, String title, String html, String type, String source, ArrayList<String> url_link) {
+		super();
+		this.url = url;
+		this.title = title;
 		this.html = html;
 		this.type = type;
 		this.source = source;
 		this.url_link = url_link;
 	}
+
+	
+	public String getTitle() {
+		return title;
+	}
+
+
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+
 
 	public String getUrl() {
 		return url;
