@@ -14,6 +14,8 @@ public interface SearchDAO {
 	
 	public void save1(UrlData urlData,String table);
 	
+	public void update1(String url,String classified,String table);
+	
 	public List<UrlData> getAll();
 	
 	

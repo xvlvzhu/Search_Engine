@@ -35,10 +35,19 @@ public class SearchDAOJdbcImpl extends DAO<UrlData> implements SearchDAO {
 		String sql = "INSERT INTO "+table +"(URL,HTML,TITLE,TYPE,URLList,TIME) VALUES (?,?,?,?,?,?)";
 		update(sql, urlData.getUrl(),urlData.getHtml(),urlData.getTitle(),urlData.getSource(),urlData.getUrl_link(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 	}
+	
+	/**
+	 * 提取网页类型
+	 */
+	public void update1(String url,String classified,String table) {
+		// TODO Auto-generated method stub
+		String sql = "UPDATE "+table +" SET CLASSIFIED=? WHERE URL=?";
+		update(sql,classified,url);
+	}
 
 	@Override
 	public List<UrlData> getAll() {
-		return getForList("SELECT URL,HTML,TITLE FROM Search_Engine_Test_ZXL_2 LIMIT 10000");
+		return getForList("SELECT URL,HTML,TITLE,RANK FROM Search_Engine_Test_ZXL_2");
 	}
 
 

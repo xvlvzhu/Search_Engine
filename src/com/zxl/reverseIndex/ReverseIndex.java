@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +29,7 @@ import org.apache.lucene.store.RAMDirectory;
 import com.zxl.dao.SearchDAO;
 import com.zxl.dao.SearchDAOJdbcImpl;
 import com.zxl.javaBean.UrlData;
+import com.zxl.util.SortByRank;
 
 public class ReverseIndex {
 
@@ -86,6 +88,7 @@ public class ReverseIndex {
 				doc.add(new Field("url", urlData.getUrl(), TextField.TYPE_STORED));
 				doc.add(new Field("html", urlData.getHtml(), TextField.TYPE_STORED));
 				doc.add(new Field("title", urlData.getTitle(), TextField.TYPE_STORED));
+				doc.add(new Field("rank", urlData.getRank()+"", TextField.TYPE_STORED));
 				writer.addDocument(doc);
 			}
 			writer.commit();
@@ -109,7 +112,7 @@ public class ReverseIndex {
 			// analyzer).parse("陕西"), 10);
 			TopDocs topdoc = searcher.search(new QueryParser("title", new SmartChineseAnalyzer()).parse(text), 100);
 			TopDocs topdoc_1 = searcher.search(new QueryParser("html", new SmartChineseAnalyzer()).parse(text), 100);
-			System.out.println("命中个数:" + (topdoc.totalHits+topdoc_1.totalHits));
+//			System.out.println("命中个数:" + (topdoc.totalHits+topdoc_1.totalHits));
 			ScoreDoc[] hits = topdoc.scoreDocs;
 			ScoreDoc[] hits_1 = topdoc_1.scoreDocs;
 
@@ -120,10 +123,12 @@ public class ReverseIndex {
 					urlData.setUrl(hitDoc.get("url"));
 					urlData.setTitle(hitDoc.get("title"));
 					urlData.setHtml(hitDoc.get("html"));
+					urlData.setRank(Double.parseDouble(hitDoc.get("rank")));
 					queryResult.add(urlData);
-					System.out.println(hitDoc.get("url"));
-					System.out.println(hitDoc.get("title"));
- 				    System.out.println(hitDoc.get("html"));
+//					System.out.println(hitDoc.get("url"));
+//					System.out.println(hitDoc.get("title"));
+// 				    System.out.println(hitDoc.get("html"));
+// 				   System.out.println(urlData.getRank());
 				}
 			}
 			
@@ -134,10 +139,12 @@ public class ReverseIndex {
 					urlData.setUrl(hitDoc.get("url"));
 					urlData.setTitle(hitDoc.get("title"));
 					urlData.setHtml(hitDoc.get("html"));
+					urlData.setRank(Double.valueOf(hitDoc.get("rank")).doubleValue());
 					queryResult.add(urlData);
-					System.out.println(hitDoc.get("url"));
-					System.out.println(hitDoc.get("title"));
- 				    System.out.println(hitDoc.get("html"));
+//					System.out.println(hitDoc.get("url"));
+//					System.out.println(hitDoc.get("title"));
+// 				    System.out.println(hitDoc.get("html"));
+//					System.out.println(urlData.getRank());
 				}
 			}
 
@@ -145,6 +152,13 @@ public class ReverseIndex {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+//		System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
+		 if (queryResult.size()>1) {
+			 Collections.sort(queryResult);
+		 }
+//		 for(UrlData urlData:queryResult){
+//			 System.out.println(urlData.getUrl()+" "+ urlData.getRank());
+//		 }
 		return queryResult;
 	}
 	

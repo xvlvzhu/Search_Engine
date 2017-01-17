@@ -229,6 +229,8 @@ public class News_Crawler_2 {
 									
 									searchDAO.save1(uData, "Search_Engine_Test_ZXL_2");
 								}
+								uData=null;
+								html_tmp=null;
 
 							} catch (Exception e) {
 								// e.printStackTrace();

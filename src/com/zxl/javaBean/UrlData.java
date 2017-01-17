@@ -9,12 +9,13 @@ import java.util.List;
  * @author zxl
  *
  */
-public class UrlData {
+public class UrlData implements Comparable<UrlData>{
 	private String url; // 网址
 	private String title; // 标题
 	private String html; // html
-	private String type; // 网页类型
-	private String source; // 来源
+	private String type; // 分类
+	private String source ; // 来源
+	private Double rank;
 	private ArrayList<String> url_link = new ArrayList<>(); // 指向的url链接
 
 	public UrlData() {
@@ -40,6 +41,18 @@ public class UrlData {
 		this.title = title;
 		this.html = html;
 	}
+	
+	
+
+
+
+	public UrlData(String url, String html,String title,  Double rank) {
+	super();
+	this.url = url;
+	this.title = title;
+	this.html = html;
+	this.rank = rank;
+}
 
 
 
@@ -54,6 +67,18 @@ public class UrlData {
 	}
 
 	
+	public Double getRank() {
+		return rank;
+	}
+
+
+
+	public void setRank(Double rank) {
+		this.rank = rank;
+	}
+
+
+
 	public String getTitle() {
 		return title;
 	}
@@ -117,6 +142,36 @@ public class UrlData {
 	@Override
 	public String toString() {
 		return "UrlData [url=" + url + ", html=" + html + ", type=" + type + ", source=" + source + "]";
+	}
+
+
+
+	@Override
+	public int compareTo(UrlData o) {
+//		if (this.getRank()>o.getRank()) {
+//			return -1;
+//		}
+//		if (this.getRank()==o.getRank()) {
+//			return 0;
+//		}
+//		return 1;
+//		
+		if(this == null && o == null) {  
+		    return 0;  
+		}  
+		if(this == null) {  
+		    return -1;  
+		}  
+		if(o == null) {  
+		    return 1;  
+		}  
+		if(this.getRank() > o.getRank()) {  
+		    return -1;  
+		}  
+		if(o.getRank() > this.getRank()) {  
+		    return 1;  
+		}  
+		return 0; 
 	}
 
 }
